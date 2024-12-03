@@ -1,11 +1,11 @@
 # Django framework
-django==4.2.5
+django==5.1.3
 
 # PostgreSQL adapter for Django
-psycopg2-binary==2.9.6
+#psycopg2-binary==2.9.6
 
 # Optional: Django REST Framework for building APIs
-djangorestframework==3.14.0
+djangorestframework==3.15.2
 
 # Optional: If you use CORS headers for React-Django integration
 django-cors-headers==4.0.0
