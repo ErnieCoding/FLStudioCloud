@@ -1,0 +1,59 @@
+/* RepositoriesPage.css */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f6f8fa; /* GitHub's light background */
+}
+
+.repositories-page {
+  padding: 20px;
+}
+
+header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+header h1 {
+  color: #24292e; /* GitHub's dark gray */
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.repo-card {
+  background-color: #ffffff;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  width: 300px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.repo-card:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.repo-card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #0366d6; /* GitHub blue */
+}
+
+.repo-card h2:hover {
+  text-decoration: underline;
+}
+
+.repo-card p {
+  margin: 10px 0 0;
+  color: #586069; /* GitHub gray */
+  font-size: 0.875rem;
+}
