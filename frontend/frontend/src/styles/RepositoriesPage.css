@@ -17,7 +17,7 @@ header {
 }
 
 header h1 {
-  color: #24292e; /* GitHub's dark gray */
+  color: white; 
 }
 
 main {
@@ -28,32 +28,73 @@ main {
 }
 
 .repo-card {
-  background-color: #ffffff;
+  background-color: #ffffff; /* White background for each repository card */
   border: 1px solid #e1e4e8;
   border-radius: 6px;
   width: 300px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: box-shadow 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out, background-color 0.3s ease; /* Added background-color transition */
 }
 
+/* Hover effect for repo cards */
 .repo-card:hover {
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  background-color: black; /* Change to black background on hover */
 }
 
+/* Repo card title */
 .repo-card h2 {
   margin: 0;
   font-size: 1.25rem;
-  color: #0366d6; /* GitHub blue */
+  color: #0366d6; /* GitHub blue for repository name */
+  transition: color 0.3s ease; /* Smooth transition for title color */
 }
 
-.repo-card h2:hover {
+/* Repo card title hover effect */
+.repo-card:hover h2 {
+  color: #ffffff; /* White text on hover */
   text-decoration: underline;
 }
 
+/* Repo card description */
 .repo-card p {
   margin: 10px 0 0;
   color: #586069; /* GitHub gray */
   font-size: 0.875rem;
+  transition: color 0.3s ease; /* Smooth transition for description color */
+}
+
+/* Repo card description hover effect */
+.repo-card:hover p {
+  color: #ffffff; /* White text on hover */
+}
+
+/* Create Repository section */
+.create-repo {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.create-repo input {
+  margin: 10px 5px;
+  padding: 10px;
+  width: 200px;
+  font-size: 1rem;
+}
+
+.create-repo button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #0366d6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-repo button:hover {
+  background-color: #0353a4;
 }
