@@ -6,10 +6,12 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent page refresh
-    setError(null);
+    setError(null); // Clear previous errors
+    setIsLoading(true); // Set loading state
 
     try {
       const response = await fetch('http://localhost:8000/api/token/', {
@@ -20,19 +22,24 @@ const LoginPage = () => {
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await response.json(); // Parse JSON once
+      console.log('Response status:', response.status);
+      console.log('Response body:', data);
+
       if (response.ok) {
-        const data = await response.json();
         // Save tokens to localStorage
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
         console.log('Login successful!');
-        window.location.href = '/repositories'; // Redirect to the main page
+        window.location.href = '/repositories'; // Redirect to repositories
       } else {
-        const data = await response.json();
-        setError(data.detail); // Display backend error message
+        setError(data.detail || 'Invalid username or password.');
       }
     } catch (err) {
+      console.error('Error during login:', err);
       setError('Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false); // Reset loading state
     }
   };
 
@@ -58,7 +65,9 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Sign in</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Signing in...' : 'Sign in'}
+          </button>
         </form>
         {error && <p className="error">{error}</p>}
         <p>
