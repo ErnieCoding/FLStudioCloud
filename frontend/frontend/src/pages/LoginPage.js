@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/LoginPage.css';
 
 const LoginPage = () => {
@@ -7,11 +8,11 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent form submission refresh
+    e.preventDefault(); // Prevent page refresh
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/login/', {
+      const response = await fetch('http://localhost:8000/api/token/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,11 +22,14 @@ const LoginPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data.message);
-        window.location.href = 'RepositoriesPage.js'; // Redirect on success
+        // Save tokens to localStorage
+        localStorage.setItem('accessToken', data.access);
+        localStorage.setItem('refreshToken', data.refresh);
+        console.log('Login successful!');
+        window.location.href = '/repositories'; // Redirect to the main page
       } else {
         const data = await response.json();
-        setError(data.message); // Display error message
+        setError(data.detail); // Display backend error message
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
@@ -57,7 +61,9 @@ const LoginPage = () => {
           <button type="submit">Sign in</button>
         </form>
         {error && <p className="error">{error}</p>}
-        <p><a href="#">Create an account</a>.</p>
+        <p>
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </p>
       </main>
     </div>
   );

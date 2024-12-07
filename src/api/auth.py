@@ -1,27 +1,19 @@
 from .models import Users
 from django.core.exceptions import ObjectDoesNotExist
 
-def authenticate_user(username: str, password: str) -> bool:
+def authenticate_user(username: str, password: str) -> Users:
     """
-    Authenticate a user by verifying the username and raw password against the database.
-
-    Args:
-        username (str): The username to authenticate.
-        password (str): The raw password to verify.
-
-    Returns:
-        bool: True if authentication is successful, False otherwise.
+    Authenticate a user against the Users table.
+    Returns the user instance if authentication is successful.
     """
     try:
-        # Fetch the user by username
+        # Retrieve the user by username
         user = Users.objects.get(username=username)
-        print(f"User found: {user.username}")
 
-        # Compare raw passwords
-        return user.check_password(password)
+        # Validate password
+        if user.check_password(password):
+            return user
+    except ObjectDoesNotExist:
+        pass
 
-    except Users.DoesNotExist:
-        print("User does not exist")
-        return False
-
-
+    return None

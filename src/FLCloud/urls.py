@@ -1,9 +1,12 @@
 from django.contrib import admin
-from django.urls import path, include
-from django.views.generic import TemplateView
-from api.views import login_view
+from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
+from api.views import signup_view, ProtectedView, CustomTokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/login/', login_view, name='login')
+    path('api/signup/', signup_view, name='signup'),
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/protected/', ProtectedView.as_view(), name='protected'),
 ]

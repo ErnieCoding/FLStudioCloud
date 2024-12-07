@@ -1,8 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-import bcrypt
 
-# Custom User Manager
 class Users(models.Model):
     """
     This model corresponds to the 'Users' table in the PostgreSQL database.
@@ -21,7 +18,7 @@ class Users(models.Model):
         """
         return self.password == raw_password
 
-# Projects Model
+
 class Projects(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(
@@ -34,7 +31,7 @@ class Projects(models.Model):
     class Meta:
         db_table = 'Projects'
 
-# Version_History Model
+
 class Version_History(models.Model):
     id = models.AutoField(primary_key=True)
     project_id = models.ForeignKey(
