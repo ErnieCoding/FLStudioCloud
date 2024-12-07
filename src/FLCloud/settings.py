@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import json
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,9 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api.apps.ApiConfig',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,10 +57,16 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'FLCloud.urls'
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Add your React app's URL
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'frontend/frontend/public'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,10 +85,29 @@ WSGI_APPLICATION = 'FLCloud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+#TODO: Configure database, connect to EC2 instance instead of local
+databaseJson_path = os.path.join(BASE_DIR, 'FL_Database.json')
+
+# Load the JSON file
+with open(databaseJson_path, 'r') as f:
+    database_config = json.load(f)
+
+# Extract the PostgreSQL configuration
+postgres_config = database_config['Servers']['1']
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': postgres_config['MaintenanceDB'],  # Default database (typically 'postgres' for maintenance)
+        'USER': postgres_config['Username'],       # Username from JSON
+        'PASSWORD': 'Database!!',          # Replace with your local PostgreSQL password
+        'HOST': postgres_config['Host'],           # Host (localhost for local connections)
+        'PORT': postgres_config['Port'],           # Port (default is 5432)
+        'OPTIONS': {
+            'options': '-c search_path=public',    # Include search_path if necessary
+            **postgres_config.get("ConnectionParameters", {})  # Additional connection params (e.g., sslmode)
+        },
     }
 }
 
@@ -99,6 +130,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'auth.User'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -116,6 +149,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIR = [
+    os.path.join(BASE_DIR, 'frontend/frontend/src'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
