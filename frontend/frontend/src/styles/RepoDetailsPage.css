@@ -1,48 +1,55 @@
 /* RepoDetailsPage.css */
 
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f6f8fa; /* GitHub's light background */
-}
-
-.repo-details-page {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.repo-details-page h1 {
-  color: black; 
-  margin-bottom: 20px;
-  font-size: 2rem;
-}
-
-.repo-details-page ul {
+/* File section styling */
+.file-list {
   list-style-type: none;
   padding: 0;
 }
 
-.repo-details-page ul li {
-  background-color: black;
+.file-list li {
+  background-color: #ffffff; /* White background for files */
   border: 1px solid #e1e4e8;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease-in-out;
 }
 
-.repo-details-page ul li:hover {
-  background-color: #f3f4f6; /* Slight hover effect */
+/* Hover effect for file items */
+.file-list li:hover {
+  background-color: black; /* Change to black background on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
 }
 
-.repo-details-page ul li:before {
+/* File icon styling */
+.file-icon {
+  margin-right: 10px;
+  color: #0366d6; /* Change icon color to blue to contrast with white background */
+  transition: color 0.3s ease; /* Smooth transition for icon color */
+}
+
+/* Change icon color when hovering over the file item */
+.file-list li:hover .file-icon {
+  color: white; /* Icon color changes to white on hover */
+}
+
+/* File name styling */
+.file-name {
+  color: #0366d6; /* GitHub blue for file name */
+  font-size: 1rem;
+  transition: color 0.3s ease; /* Smooth transition for text color */
+}
+
+/* Change text color on hover */
+.file-list li:hover .file-name {
+  color: #ffffff; /* Change file name text color to white on hover */
+}
+
+/* File emoji before each file */
+.file-list li:before {
   content: '\1F4C4'; /* File emoji */
   margin-right: 10px;
-}
-
-.repo-details-page ul li:last-child {
-  margin-bottom: 0;
 }
