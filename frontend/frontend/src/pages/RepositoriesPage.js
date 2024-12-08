@@ -5,6 +5,8 @@ import BackButton from '../components/BackButton';
 import '../styles/RepositoriesPage.css';
 import { fetchWithAuth } from '../utils/apiUtils';
 
+const BASE_URL = 'http://ec2-54-82-5-168.compute-1.amazonaws.com';
+
 const RepositoriesPage = () => {
   const [repositories, setRepositories] = useState([]);
   const [newRepoName, setNewRepoName] = useState('');
@@ -16,7 +18,7 @@ const RepositoriesPage = () => {
     const fetchRepositories = async () => {
       setError(null); // Clear any previous error
       try {
-        const response = await fetchWithAuth('http://localhost:8000/api/repositories/', { method: 'GET' });
+        const response = await fetchWithAuth(`${BASE_URL}/api/repositories/`, { method: 'GET' });
         if (response.ok) {
           const data = await response.json();
           setRepositories(data.repositories);
@@ -38,7 +40,7 @@ const RepositoriesPage = () => {
     setError(null); // Clear previous error
     if (newRepoName.trim() && newRepoDescription.trim()) {
       try {
-        const response = await fetchWithAuth('http://localhost:8000/api/repositories/create/', {
+        const response = await fetchWithAuth(`${BASE_URL}/api/repositories/create/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

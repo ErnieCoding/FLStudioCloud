@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-pye9(!%3x_*+f+l+391$hcrk-80-y51p9%pylka^^z_ehs(j0n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ec2-54-82-5-168.compute-1.amazonaws.com', '54.82.5.168', 'localhost']
 
 
 # Application definition
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -61,7 +61,14 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'FLCloud.urls'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # Add your React app's URL
+    'http://localhost',
+    'http://ec2-54-82-5-168.compute-1.amazonaws.com',
+    'http://54.82.5.168',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://ec2-54-82-5-168.compute-1.amazonaws.com',
+    
 ]
 
 TEMPLATES = [
@@ -161,6 +168,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIR = [
     os.path.join(BASE_DIR, 'frontend/frontend/src'),

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/SignUpPage.css';
 
+const BASE_URL = 'http://ec2-54-82-5-168.compute-1.amazonaws.com';
+
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -24,7 +26,7 @@ const SignUpPage = () => {
     setIsSubmitting(true); // Disable form submission while processing
 
     try {
-      const response = await fetch('http://localhost:8000/api/signup/', {
+      const response = await fetch(`${BASE_URL}/api/signup/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

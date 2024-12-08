@@ -6,6 +6,8 @@ import BackButton from '../components/BackButton';
 import '../styles/RepoDetailsPage.css';
 import { fetchWithAuth } from '../utils/apiUtils';
 
+const BASE_URL = 'http://ec2-54-82-5-168.compute-1.amazonaws.com';
+
 const RepoDetailsPage = () => {
   const { repoName: repoId } = useParams();
   const [files, setFiles] = useState([]);
@@ -18,7 +20,7 @@ const RepoDetailsPage = () => {
     const fetchRepositoryDetails = async () => {
       try {
         // Fetch repository details
-        const repoResponse = await fetchWithAuth(`http://localhost:8000/api/repositories/${repoId}/`);
+        const repoResponse = await fetchWithAuth(`${BASE_URL}/api/repositories/${repoId}/`);
         if (repoResponse.ok) {
           const repoData = await repoResponse.json();
           setRepository(repoData);
@@ -28,7 +30,7 @@ const RepoDetailsPage = () => {
         }
 
         // Fetch files for the repository
-        const filesResponse = await fetchWithAuth(`http://localhost:8000/api/repositories/${repoId}/files/`);
+        const filesResponse = await fetchWithAuth(`${BASE_URL}/api/repositories/${repoId}/files/`);
         if (filesResponse.ok) {
           const filesData = await filesResponse.json();
           setFiles(filesData.files);
@@ -83,7 +85,7 @@ const RepoDetailsPage = () => {
     newFiles.forEach((file) => formData.append('files', file));
 
     try {
-      const response = await fetchWithAuth(`http://localhost:8000/api/repositories/${repoId}/upload/`, {
+      const response = await fetchWithAuth(`${BASE_URL}/api/repositories/${repoId}/upload/`, {
         method: 'POST',
         body: formData,
       });
