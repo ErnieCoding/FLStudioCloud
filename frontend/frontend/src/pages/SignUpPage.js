@@ -9,6 +9,7 @@ const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault(); // Prevent page refresh
@@ -19,6 +20,8 @@ const SignUpPage = () => {
       setError('Passwords do not match.');
       return;
     }
+
+    setIsSubmitting(true); // Disable form submission while processing
 
     try {
       const response = await fetch('http://localhost:8000/api/signup/', {
@@ -31,7 +34,7 @@ const SignUpPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setSuccess(data.message); // Display success message
+        setSuccess(data.message || 'Account created successfully!'); // Show success message
         setUsername('');
         setEmail('');
         setPassword('');
@@ -42,10 +45,12 @@ const SignUpPage = () => {
         }, 2000);
       } else {
         const data = await response.json();
-        setError(data.message); // Display backend error message
+        setError(data.message || 'Failed to create account. Please try again.');
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false); // Re-enable form submission
     }
   };
 
@@ -85,7 +90,9 @@ const SignUpPage = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Signing up...' : 'Sign Up'}
+          </button>
         </form>
         {error && <p className="error">{error}</p>}
         {success && <p className="success">{success}</p>}

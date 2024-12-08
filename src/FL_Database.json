@@ -1,9 +1,9 @@
 {
     "Servers": {
         "1": {
-            "Name": "PostgreSQL 17",
+            "Name": "AWS PostgreSQL",
             "Group": "Servers",
-            "Host": "localhost",
+            "Host": ["localhost", "ec2-54-210-73-155.compute-1.amazonaws.com"],
             "Port": 5432,
             "MaintenanceDB": "postgres",
             "Username": "postgres",
@@ -17,3 +17,4 @@
         }
     }
 }
+

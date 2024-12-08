@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import RepoCard from '../components/RepoCard';
+import AccountDropdown from '../components/AccountDropdown';
+import BackButton from '../components/BackButton';
 import '../styles/RepositoriesPage.css';
 import { fetchWithAuth } from '../utils/apiUtils';
 
@@ -44,7 +46,7 @@ const RepositoriesPage = () => {
             description: newRepoDescription,
           }),
         });
-
+  
         if (response.ok) {
           const newRepo = await response.json();
           setRepositories([...repositories, newRepo]);
@@ -52,7 +54,8 @@ const RepositoriesPage = () => {
           setNewRepoDescription('');
         } else {
           const errorData = await response.json();
-          setError(errorData.message || 'Failed to create repository.');
+          console.error('Error creating repository:', errorData);
+          setError(errorData.detail || 'Failed to create repository.');
         }
       } catch (err) {
         console.error('Error creating repository:', err);
@@ -66,9 +69,11 @@ const RepositoriesPage = () => {
   return (
     <div className="repositories-page">
       <header>
+        <AccountDropdown />
         <h1>Your Repositories</h1>
       </header>
       <main>
+        <BackButton />
         {error && <p className="error">{error}</p>}
         {repositories.length === 0 ? (
           <p>No repositories found.</p>

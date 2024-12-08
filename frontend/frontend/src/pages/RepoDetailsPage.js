@@ -1,16 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaFileAudio, FaFileImage, FaFileCode, FaFilePdf, FaFileAlt } from 'react-icons/fa';
+import AccountDropdown from '../components/AccountDropdown';
+import BackButton from '../components/BackButton';
 import '../styles/RepoDetailsPage.css';
+import { fetchWithAuth } from '../utils/apiUtils';
 
 const RepoDetailsPage = () => {
-  const { repoName } = useParams();
-
-  // Preexisting files in the repository
-  const predefinedFiles = ['index.html', 'main.css', 'app.js', 'README.md'];
-
-  // Local state to track uploaded files
+  const { repoName: repoId } = useParams();
+  const [files, setFiles] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [repository, setRepository] = useState(null); // Holds repository details
+  const [error, setError] = useState(null);
+
+  // Fetch repository details and files
+  useEffect(() => {
+    const fetchRepositoryDetails = async () => {
+      try {
+        // Fetch repository details
+        const repoResponse = await fetchWithAuth(`http://localhost:8000/api/repositories/${repoId}/`);
+        if (repoResponse.ok) {
+          const repoData = await repoResponse.json();
+          setRepository(repoData);
+        } else {
+          const repoErrorData = await repoResponse.json();
+          setError(repoErrorData.message || 'Failed to fetch repository details.');
+        }
+
+        // Fetch files for the repository
+        const filesResponse = await fetchWithAuth(`http://localhost:8000/api/repositories/${repoId}/files/`);
+        if (filesResponse.ok) {
+          const filesData = await filesResponse.json();
+          setFiles(filesData.files);
+        } else {
+          const filesErrorData = await filesResponse.json();
+          setError(filesErrorData.message || 'Failed to fetch files.');
+        }
+      } catch (err) {
+        console.error('Error fetching repository details or files:', err);
+        setError('Something went wrong. Please try again.');
+      }
+    };
+
+    fetchRepositoryDetails();
+  }, [repoId]);
 
   // File type mapping (icons based on file type)
   const getFileIcon = (fileName) => {
@@ -30,6 +63,10 @@ const RepoDetailsPage = () => {
       case 'css':
       case 'js':
       case 'jsx':
+      case 'py':
+      case 'h':
+      case 'c':
+      case 'cpp':
         return <FaFileCode className="file-icon" />;
       case 'pdf':
         return <FaFilePdf className="file-icon" />;
@@ -38,44 +75,64 @@ const RepoDetailsPage = () => {
     }
   };
 
-  // Handle file upload (adds file to local state)
-  const handleFileUpload = (event) => {
-    const newFiles = Array.from(event.target.files).map((file) => file.name);
-    setUploadedFiles((prevFiles) => [...prevFiles, ...newFiles]);
+  // Handle file upload
+  const handleFileUpload = async (event) => {
+    const formData = new FormData();
+    const newFiles = Array.from(event.target.files);
+
+    newFiles.forEach((file) => formData.append('files', file));
+
+    try {
+      const response = await fetchWithAuth(`http://localhost:8000/api/repositories/${repoId}/upload/`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const uploaded = await response.json();
+        setFiles((prevFiles) => [...prevFiles, ...uploaded.files]);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to upload files.');
+      }
+    } catch (err) {
+      console.error('Error uploading files:', err);
+      setError('Something went wrong. Please try again.');
+    }
   };
 
   return (
     <div className="repo-details-page">
-      <h1>Repository: {repoName}</h1>
-
-      {/* File upload section */}
-      <div className="upload-section">
-        <input
-          type="file"
-          multiple
-          onChange={handleFileUpload}
-          className="file-upload"
-        />
-      </div>
-
-      {/* File list section */}
-      <ul className="file-list">
-        {/* Render preexisting files in the repository */}
-        {predefinedFiles.map((file, index) => (
-          <li key={`predefined-${index}`}>
-            {getFileIcon(file)}
-            <span className="file-name">{file}</span>
-          </li>
-        ))}
-
-        {/* Render uploaded files */}
-        {uploadedFiles.map((file, index) => (
-          <li key={`uploaded-${index}`}>
-            {getFileIcon(file)}
-            <span className="file-name">{file}</span>
-          </li>
-        ))}
-      </ul>
+      <header>
+        <AccountDropdown />
+        <h1>Repository: {repository ? repository.title : 'Loading...'}</h1>
+      </header>
+      <main>
+        <BackButton />
+        <div className="upload-section">
+          <input
+            type="file"
+            multiple
+            onChange={handleFileUpload}
+            className="file-upload"
+          />
+        </div>
+        {error && <p className="error">{error}</p>}
+        <ul className="file-list">
+          {files.map((file, index) => (
+            <li key={`file-${index}`}>
+              {getFileIcon(file.file_name)}
+              <span className="file-name">{file.file_name}</span>
+            </li>
+          ))}
+          {uploadedFiles.map((file, index) => (
+            <li key={`uploaded-${index}`}>
+              {getFileIcon(file.name)}
+              <span className="file-name">{file.name}</span>
+            </li>
+          ))}
+        </ul>
+      </main>
     </div>
   );
 };

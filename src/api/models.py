@@ -6,6 +6,10 @@ class Users(models.Model):
     username = models.CharField(max_length=50, unique=True, null=False)
     email = models.EmailField(max_length=100, unique=True, null=False)
     password = models.CharField(max_length=255, null=False)  # Store raw password
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
@@ -19,10 +23,6 @@ class Users(models.Model):
 
     @property
     def is_authenticated(self):
-        return True
-    
-    @property
-    def is_active(self):
         return True
 
     @property

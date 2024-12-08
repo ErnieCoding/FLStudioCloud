@@ -105,7 +105,7 @@ DATABASES = {
         'NAME': postgres_config['MaintenanceDB'],  # Default database (typically 'postgres' for maintenance)
         'USER': postgres_config['Username'],       # Username from JSON
         'PASSWORD': 'Database!!',          # Replace with your local PostgreSQL password
-        'HOST': postgres_config['Host'],           # Host (localhost for local connections)
+        'HOST': postgres_config['Host'][1],           # Host (localhost for local connections)
         'PORT': postgres_config['Port'],           # Port (default is 5432)
         'OPTIONS': {
             'options': '-c search_path=public',    # Include search_path if necessary
