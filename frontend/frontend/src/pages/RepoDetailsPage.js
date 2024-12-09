@@ -6,7 +6,7 @@ import BackButton from '../components/BackButton';
 import '../styles/RepoDetailsPage.css';
 import { fetchWithAuth } from '../utils/apiUtils';
 
-const BASE_URL = 'http://ec2-54-82-5-168.compute-1.amazonaws.com';
+const BASE_URL = 'http://ec2-52-205-208-197.compute-1.amazonaws.com';
 
 const RepoDetailsPage = () => {
   const { repoName: repoId } = useParams();

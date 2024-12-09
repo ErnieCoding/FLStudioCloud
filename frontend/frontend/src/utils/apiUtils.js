@@ -1,4 +1,4 @@
-const BASE_URL = 'http://ec2-54-82-5-168.compute-1.amazonaws.com'; // Replace with your backend URL
+const BASE_URL = 'http://ec2-52-205-208-197.compute-1.amazonaws.com'; // Use a single string for the base URL
 
 export const refreshAccessToken = async () => {
     const refreshToken = localStorage.getItem('refreshToken');
@@ -25,7 +25,6 @@ export const refreshAccessToken = async () => {
         } else {
             const errorData = await response.json();
             console.error(`Failed to refresh access token: ${errorData.detail}`);
-            // Clear tokens and redirect to login
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             throw new Error('Failed to refresh access token.');
@@ -42,10 +41,10 @@ export const fetchWithAuth = async (url, options = {}) => {
     let accessToken = localStorage.getItem('accessToken');
     const headers = options.headers || {};
 
-    console.log("Using Access Token:", accessToken); // Debugging: Log the token
+    console.log('Using Access Token:', accessToken); // Debugging: Log the token
 
     try {
-        const response = await fetch(`${BASE_URL}${url}`, {
+        const response = await fetch(url, {
             ...options,
             headers: {
                 ...headers,
@@ -54,13 +53,12 @@ export const fetchWithAuth = async (url, options = {}) => {
         });
 
         if (response.status === 401) {
-            console.warn("Access token expired. Attempting to refresh...");
+            console.warn('Access token expired. Attempting to refresh...');
             accessToken = await refreshAccessToken();
 
-            console.log("Refreshed Access Token:", accessToken); // Debugging: Log the refreshed token
+            console.log('Refreshed Access Token:', accessToken); // Debugging: Log the refreshed token
 
-            // Retry the original request with the new token
-            return fetch(`${BASE_URL}${url}`, {
+            return fetch(url, {
                 ...options,
                 headers: {
                     ...headers,
@@ -71,7 +69,7 @@ export const fetchWithAuth = async (url, options = {}) => {
 
         return response;
     } catch (error) {
-        console.error("Error in fetchWithAuth:", error);
+        console.error('Error in fetchWithAuth:', error);
         throw error;
     }
 };

@@ -5,7 +5,7 @@ import BackButton from '../components/BackButton';
 import '../styles/RepositoriesPage.css';
 import { fetchWithAuth } from '../utils/apiUtils';
 
-const BASE_URL = 'http://ec2-54-82-5-168.compute-1.amazonaws.com';
+const BASE_URL = 'http://ec2-52-205-208-197.compute-1.amazonaws.com';  
 
 const RepositoriesPage = () => {
   const [repositories, setRepositories] = useState([]);
@@ -13,11 +13,11 @@ const RepositoriesPage = () => {
   const [newRepoDescription, setNewRepoDescription] = useState('');
   const [error, setError] = useState(null);
 
-  // Fetch repositories for the logged-in user
   useEffect(() => {
     const fetchRepositories = async () => {
-      setError(null); // Clear any previous error
+      setError(null);
       try {
+        
         const response = await fetchWithAuth(`${BASE_URL}/api/repositories/`, { method: 'GET' });
         if (response.ok) {
           const data = await response.json();
@@ -35,20 +35,17 @@ const RepositoriesPage = () => {
     fetchRepositories();
   }, []);
 
-  // Handle creating a new repository
   const handleCreateRepo = async () => {
-    setError(null); // Clear previous error
+    setError(null);
     if (newRepoName.trim() && newRepoDescription.trim()) {
       try {
+        
         const response = await fetchWithAuth(`${BASE_URL}/api/repositories/create/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: newRepoName,
-            description: newRepoDescription,
-          }),
+          body: JSON.stringify({ title: newRepoName, description: newRepoDescription }),
         });
-  
+
         if (response.ok) {
           const newRepo = await response.json();
           setRepositories([...repositories, newRepo]);

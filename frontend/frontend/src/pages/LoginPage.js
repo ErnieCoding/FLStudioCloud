@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../styles/LoginPage.css';
 
 // Update the base URL to match your backend's deployment address
-const BASE_URL = 'http://ec2-54-82-5-168.compute-1.amazonaws.com';
+const BASE_URL = 'http://ec2-52-205-208-197.compute-1.amazonaws.com';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
